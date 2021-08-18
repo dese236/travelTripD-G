@@ -8,13 +8,24 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearchLoc = onSearchLoc;
+window.onCopyLink = onCopyLink;
 let gCurrPos;
-let gWindow
+let gWindow;
 
 function onInit() {
-    mapService.initMap()
+    getQueryParams()
+        .then((params) => {
+            const lat = params['lat'] ? +params['lat'] : 32.0749831;
+            const lng = params['lng'] ? +params['lng'] : 34.9120554;
+            return { lat, lng };
+        })
+        .then(({ lat, lng }) => {
+            return mapService.initMap(lat, lng)
+        })
         .then((map) => {
+            console.log(map)
             gWindow = new google.maps.InfoWindow({
+
                 content: "Click the map to get Lat/Lng!",
                 position: map.position,
             });
@@ -33,49 +44,48 @@ function onInit() {
             console.log('Map is ready');
         })
         .catch(() => console.log('Error: cannot init map'));
-    // debugger
-    locService.getLocs()
+
 }
 
-// This function provides a Promise API to the callback-based-api of getCurrentPosition
+
+
+
 function getPosition() {
     console.log('Getting Pos');
     return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
 }
 
 function onAddMarker() {
-    console.log(gWindow)
     gWindow.close()
     mapService.addMarker(gCurrPos);
-    // locService.addPositon(gCurrPos)
 
 }
 
 function onGetLocs() {
+    locService.getLocs().then((locs) => {
+        const strHtml = locs
+            .map((loc) =>
+                `<tr><td>${loc.name}</td><td>address</td><td><button>Go</button><button>Delete</button></td></tr>`
+            )
+            .join('');
+        document.querySelector('.locations-body').innerHTML = strHtml;
+    });
 
-    locService.getLocs()
-        .then(locs => {
-            loadFromStorage(locs)
-
-            const strHtml = locs.map(loc => `<tr><td>${loc.name}</td><td>address</td><td><button>Go</button><button>Delete</button></td></tr>`).join('')
-                //  return      
-            document.querySelector('.locations-body').innerHTML = strHtml
-
-        })
 }
 
 function onGetUserPos() {
     getPosition()
-        .then(pos => {
+        .then((pos) => {
             console.log('User position is:', pos.coords);
-            document.querySelector('.user-pos').innerText =
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            document.querySelector(
+                '.user-pos'
+            ).innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
         })
-        .catch(err => {
+        .catch((err) => {
             console.log('err!!!', err);
-        })
+        });
 }
 
 function onPanTo() {
@@ -84,8 +94,23 @@ function onPanTo() {
 }
 
 
+function onCopyLink() {
+    const link = mapService.getLink();
+    const elSpan = document.querySelector('.link-copied');
+    elSpan.hidden = false;
+    setTimeout(() => {
+        elSpan.hidden = true;
+    }, 1000);
+    navigator.clipboard.writeText(link);
+}
 
 function onSearchLoc() {
     console.log('input');
     // locService.search()
+}
+
+function getQueryParams() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    return Promise.resolve(params);
 }
