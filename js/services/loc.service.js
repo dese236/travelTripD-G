@@ -6,7 +6,9 @@ export const locService = {
 
 }
 
-const KEY = "locationsDB"
+// import { utils } from './util.service.js'
+
+
 
 const locs = [
     createLocation('Tel-aviv', 32.082, 34.767, 'sunny'),
@@ -31,7 +33,6 @@ function getLocs() {
     });
 }
 
-
 function createLocation(name, lat, lng, weather) {
     return {
         id: makeId(),
@@ -55,9 +56,7 @@ function createLocation(name, lat, lng, weather) {
 
 // }
 
-// function loadFromStorage(params) {
-//     //import
-// }
+
 
 // function getLocation(params) {
 

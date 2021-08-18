@@ -1,6 +1,4 @@
-// export const utilService = {
-// makeId,
-// }
+
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);

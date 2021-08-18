@@ -1,5 +1,10 @@
+// export const locStorage = {
+//     saveToStorage,
+//     loadFromStorage
+// }
+
 function saveToStorage(key, val) {
-    localStorage.setItem(key, JSON.stringify(val));
+    localeStorage.setItem(key, JSON.stringify(val));
 }
 
 function loadFromStorage(key) {

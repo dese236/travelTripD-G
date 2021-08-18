@@ -1,6 +1,10 @@
 // import { utilService } from './services/util.service.js'
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
+// import {locStorage} from './services/stroage.service.js'
+
+const KEY = "locationsDB"
+
 
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
@@ -44,12 +48,9 @@ function onInit() {
             console.log('Map is ready');
         })
         .catch(() => console.log('Error: cannot init map'));
-
 }
 
-
-
-
+// This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
     console.log('Getting Pos');
     return new Promise((resolve, reject) => {
@@ -64,33 +65,59 @@ function onAddMarker() {
 }
 
 function onGetLocs() {
-    locService.getLocs().then((locs) => {
-        const strHtml = locs
-            .map((loc) =>
-                `<tr><td>${loc.name}</td><td>address</td><td><button>Go</button><button>Delete</button></td></tr>`
-            )
-            .join('');
-        document.querySelector('.locations-body').innerHTML = strHtml;
-    });
+    locService.getLocs()
+        .then(locs => {
+            // console.log('Locations:', locs)
+            // document.querySelector('.locs').innerText = JSON.stringify(locs)
+            const strHtml = locs.map((loc,idx) => `
+        <tr>
+            <td>${loc.name}</td>
+            <td>address</td>
+            <td><button onclick="onPanTo(${loc.lat}, ${loc.lng})">Go</button>
+            <button data-idx=${idx} class="delete-btn">Delete</button></td>
+            </tr>` ).join('')
+            //  return      
+            document.querySelector('.locations-body').innerHTML = strHtml
+            document.querySelectorAll('.delete-btn').forEach(elBtn => {
+                elBtn.addEventListener('click', onDeleteLoction)
+            })
+        })
+}
 
+function onDeleteLoction(ev) {
+    // var locId =ev.dataset.id
+    // console.log(locId);
+   const idx =ev.target.getAttribute("data-idx");
+    locService.getLocs()
+        .then(locs => locs.splice(idx,1))
+        onGetLocs()
 }
 
 function onGetUserPos() {
+    // if(!gUserLoc)
     getPosition()
-        .then((pos) => {
+        .then(pos => {
             console.log('User position is:', pos.coords);
-            document.querySelector(
-                '.user-pos'
-            ).innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
+            document.querySelector('.user-pos').innerText =
+                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+                return {lat: pos.coords.latitude , lng : pos.coords.longitude }
         })
-        .catch((err) => {
+        .then(userLoc => {
+            // saveToStorge('userLoc' , {lat: userLoc.lat , lng: userLng})
+            mapService.panTo(userLoc.lat , userLoc.lng)})
+        
+        .catch(err => {
             console.log('err!!!', err);
-        });
+        })
 }
-
-function onPanTo() {
+function onPanTo(lat, lng) {
     console.log('Panning the Map');
-    mapService.panTo(35.6895, 139.6917);
+    if (!lat) lat = 35.6895
+    if (!lng) lng = 139.6917
+    // tokLat = 35.6895
+    // tokLng = 139.6917
+    mapService.panTo(lat , lng);
+    // mapService.panTo(lat, lng);
 }
 
 
@@ -114,3 +141,12 @@ function getQueryParams() {
     const params = Object.fromEntries(urlSearchParams.entries());
     return Promise.resolve(params);
 }
+
+
+
+// function saveLocatInStorage() {
+//     locStorage.saveToStorge(KEY, locs)
+// }
+// function loadFromStorage(params) {
+//     locStorage.loadFromStorage(KEY)
+// }

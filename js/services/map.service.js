@@ -6,7 +6,7 @@ export const mapService = {
 }
 
 var gMap;
-const BASE_LINK = 'https://https://dese236.github.io/travelTripD-G/.com';
+const BASE_LINK = 'https://dese236.github.io/travelTripD-G/';
 
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
