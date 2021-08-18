@@ -7,14 +7,23 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearchLoc = onSearchLoc;
+window.onCopyLink = onCopyLink;
 
 function onInit() {
-  mapService
-    .initMap()
-    .then(() => {
-      console.log('Map is ready');
+  getQueryParams()
+    .then((params) => {
+      const lat = params['lat'] ? +params['lat'] : 32.0749831;
+      const lng = params['lng'] ? +params['lng'] : 34.9120554;
+      return { lat, lng };
     })
-    .catch(() => console.log('Error: cannot init map'));
+    .then(({ lat, lng }) => {
+      mapService
+        .initMap(lat, lng)
+        .then(() => {
+          console.log('Map is ready');
+        })
+        .catch(() => console.log('Error: cannot init map'));
+    });
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
@@ -62,6 +71,15 @@ function onPanTo() {
   mapService.panTo(35.6895, 139.6917);
 }
 
+function onCopyLink() {
+  const link = mapService.getLink();
+  const elSpan = document.querySelector('.link-copied');
+  elSpan.hidden = false;
+  setTimeout(() => {
+    elSpan.hidden = true;
+  }, 1000);
+  navigator.clipboard.writeText(link);
+}
 function onSearchLoc() {
   console.log('input');
   // locService.search()
@@ -70,5 +88,5 @@ function onSearchLoc() {
 function getQueryParams() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
-  console.log('Query Params', params);
+  return Promise.resolve(params);
 }

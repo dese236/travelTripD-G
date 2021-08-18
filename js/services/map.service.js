@@ -2,8 +2,9 @@ export const mapService = {
   initMap,
   addMarker,
   panTo,
+  getLink,
 };
-
+const BASE_LINK = 'https://https://dese236.github.io/travelTripD-G/.com';
 var gMap;
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
@@ -62,4 +63,11 @@ function _connectGoogleApi() {
     elGoogleApi.onload = resolve;
     elGoogleApi.onerror = () => reject('Google script failed to load');
   });
+}
+
+// orish, 18:52
+function getLink() {
+  const lat = gMap.getCenter().lat();
+  const lng = gMap.getCenter().lng();
+  return `${BASE_LINK}?lat=${lat}&lng=${lng}`;
 }
