@@ -56,26 +56,22 @@ function onPanTo() {
     mapService.panTo(35.6895, 139.6917);
 }
 
-function onCreateNewLocation(params) {
+// function onCreateNewLocation(params) {
 
-}
+// }
 
-function onGetUserLocation(params) {
+// function onGetUserLocation(params) {
 
-}
-
-
-function onRemoveLocation(params) {
-
-}
-
-function onTransToCoord(params) {
-
-}
+// }
 
 
+// function onRemoveLocation(params) {
 
+// }
 
+// function onTransToCoord(params) {
+
+// }
 //todo: function get location on map
 //todo: app location render
 //todo: GO and delete
@@ -83,10 +79,3 @@ function onTransToCoord(params) {
 //todo: add search button
 //todo: add copy link
 //todo: make it look gooood!
-// function onGgetLocation() {
-//     mapService.getLocs()
-//     const map = new google.maps.Map(document.getElementById("map"), {
-//       zoom: 4,
-//       center: myLatlng,
-//     });
-//     // Create the initial InfoWindow.
