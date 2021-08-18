@@ -6,6 +6,7 @@ window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
+window.onSearchLoc = onSearchLoc;
 
 function onInit() {
   mapService
@@ -31,8 +32,16 @@ function onAddMarker() {
 
 function onGetLocs() {
   locService.getLocs().then((locs) => {
-    console.log('Locations:', locs);
-    document.querySelector('.locs').innerText = JSON.stringify(locs);
+    // console.log('Locations:', locs)
+    // document.querySelector('.locs').innerText = JSON.stringify(locs)
+    const strHtml = locs
+      .map(
+        (loc) =>
+          `<tr><td>${loc.name}</td><td>address</td><td><button>Go</button><button>Delete</button></td></tr>`
+      )
+      .join('');
+    //  return
+    document.querySelector('.locations-body').innerHTML = strHtml;
   });
 }
 
@@ -53,8 +62,13 @@ function onPanTo() {
   mapService.panTo(35.6895, 139.6917);
 }
 
+function onSearchLoc() {
+  console.log('input');
+  // locService.search()
+}
+
 function getQueryParams() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
-  console.log(params);
+  console.log('Query Params', params);
 }
