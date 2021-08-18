@@ -16,25 +16,8 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
                     center: { lat, lng },
                     zoom: 15
                 })
-            console.log('Map!', gMap);
-            let infoWindow = new google.maps.InfoWindow({
-                content: "Click the map to get Lat/Lng!",
-                position: { lat, lng },
-            });
-            infoWindow.open(gMap);
-            // Configure the click listener.
-            gMap.addListener("click", (mapsMouseEvent) => {
-                // Close the current InfoWindow.
-                infoWindow.close();
-                // Create a new InfoWindow.
-                infoWindow = new google.maps.InfoWindow({
-                    position: mapsMouseEvent.latLng,
-                });
-                infoWindow.setContent(
-                    JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-                );
-                infoWindow.open(gMap);
-            });
+
+            return gMap
         })
 }
 
@@ -52,6 +35,11 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng);
 }
 
+function getMap(params) {
+    return gMap
+
+}
+
 
 
 function _connectGoogleApi() {
@@ -67,4 +55,3 @@ function _connectGoogleApi() {
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
 }
-
