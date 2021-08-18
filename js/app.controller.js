@@ -6,6 +6,7 @@ window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
+// window.onGgetLocation = onGgetLocation;
 
 function onInit() {
     mapService.initMap()
@@ -14,6 +15,7 @@ function onInit() {
         })
         .catch(() => console.log('Error: cannot init map'));
 }
+
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
@@ -32,6 +34,7 @@ function onGetLocs() {
     locService.getLocs()
         .then(locs => {
             console.log('Locations:', locs)
+                //render table
             document.querySelector('.locs').innerText = JSON.stringify(locs)
         })
 }
@@ -47,7 +50,43 @@ function onGetUserPos() {
             console.log('err!!!', err);
         })
 }
+
 function onPanTo() {
     console.log('Panning the Map');
     mapService.panTo(35.6895, 139.6917);
 }
+
+function onCreateNewLocation(params) {
+
+}
+
+function onGetUserLocation(params) {
+
+}
+
+
+function onRemoveLocation(params) {
+
+}
+
+function onTransToCoord(params) {
+
+}
+
+
+
+
+//todo: function get location on map
+//todo: app location render
+//todo: GO and delete
+//todo: gGlobal var from user
+//todo: add search button
+//todo: add copy link
+//todo: make it look gooood!
+// function onGgetLocation() {
+//     mapService.getLocs()
+//     const map = new google.maps.Map(document.getElementById("map"), {
+//       zoom: 4,
+//       center: myLatlng,
+//     });
+//     // Create the initial InfoWindow.
