@@ -1,8 +1,7 @@
 export const locService = {
     getLocs,
     createLocation,
-    saveLocatInStorage,
-    loadFromStorage
+    addNewLocation
 
 }
 
@@ -45,6 +44,11 @@ function createLocation(name, lat, lng, weather) {
 
     }
 
+}
+
+function addNewLocation(pos, name) {
+
+    locs.push(createLocation(name, pos.lat, pos.lng))
 }
 
 // function getUserLocation(params) {

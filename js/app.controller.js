@@ -1,7 +1,7 @@
 // import { utilService } from './services/util.service.js'
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
-// import {locStorage} from './services/stroage.service.js'
+// import {localeStorage} from './services/stroage.service.js'
 
 const KEY = "locationsDB"
 
@@ -27,28 +27,34 @@ function onInit() {
             return mapService.initMap(lat, lng)
         })
         .then((map) => {
-            console.log(map)
-            gWindow = new google.maps.InfoWindow({
-
-                content: "Click the map to get Lat/Lng!",
-                position: map.position,
-            });
-            gWindow.open(map);
-            map.addListener("click", (ev) => {
-                gWindow.close();
-                gWindow = new google.maps.InfoWindow({
-                    position: ev.latLng,
-                });
-                gWindow.setContent(
-                    JSON.stringify(ev.latLng.toJSON(), null, 2)
-                );
-                gWindow.open(map);
-                gCurrPos = ev.latLng
-            });
-            console.log('Map is ready');
+            onShowWindow(map)
         })
         .catch(() => console.log('Error: cannot init map'));
 }
+
+function onShowWindow(map) {
+    console.log(map)
+    gWindow = new google.maps.InfoWindow({
+
+        content: "Click the map to get Lat/Lng!",
+        position: map.position,
+    });
+    gWindow.open(map);
+    map.addListener("click", (ev) => {
+        gWindow.close();
+        gWindow = new google.maps.InfoWindow({
+            position: ev.latLng,
+        });
+        
+        gWindow.setContent(
+            JSON.stringify(ev.latLng.toJSON(), null, 2)
+        );
+        gWindow.open(map);
+        gCurrPos = ev.latLng
+    });
+    console.log('Map is ready');
+}
+
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
@@ -60,9 +66,21 @@ function getPosition() {
 
 function onAddMarker() {
     gWindow.close()
+    console.log(gCurrPos.toJSON())
+    const curPos = gCurrPos.toJSON()
     mapService.addMarker(gCurrPos);
-
+    const name = prompt("enter name")
+        // const weather = prompt("enter name")
+    locService.addNewLocation(curPos, name)
+    onGetLocs()
+        // console.log('addres', gWindow.setContent(curPos.lan.formatted_address));
+    const geoCoder = new google.maps.Geocoder()
+    geoCoder.geocode({location :curPos}) 
+    .then((res) => {
+        console.log(gWindow.setContent(res.results[0].formatted_address));
+    })
 }
+
 
 function onGetLocs() {
     locService.getLocs()
@@ -116,7 +134,9 @@ function onPanTo(lat, lng) {
     if (!lng) lng = 139.6917
     // tokLat = 35.6895
     // tokLng = 139.6917
-    mapService.panTo(lat , lng);
+    mapService.panTo(32.071511741370415
+        , 34.92146816462982
+        );
     // mapService.panTo(lat, lng);
 }
 

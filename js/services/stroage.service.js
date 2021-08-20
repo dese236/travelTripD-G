@@ -1,4 +1,4 @@
-// export const locStorage = {
+// export const localeStorage = {
 //     saveToStorage,
 //     loadFromStorage
 // }
