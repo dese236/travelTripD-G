@@ -65,6 +65,7 @@ function getPosition() {
 }
 
 function onAddMarker() {
+    console.log('guy');
     gWindow.close()
     console.log(gCurrPos.toJSON())
     const curPos = gCurrPos.toJSON()
